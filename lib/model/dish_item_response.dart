@@ -11,6 +11,7 @@ String dishDescription;
 bool dishAvailability;
 int dishType;
 bool addOnCat;
+int cartQuantity;
 
   @override
   void fromJson(Map<String, dynamic> json) {
@@ -24,6 +25,7 @@ bool addOnCat;
     dishAvailability = json["dish_Avadish_Typeilability"];
     dishType = json["dish_Type"];
     addOnCat=json["addonCat"].isNotEmpty;
+    cartQuantity=0;
   }
 
 }

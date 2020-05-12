@@ -1,3 +1,4 @@
+import 'package:first_app/model/dish_item_response.dart';
 import 'package:first_app/model/restaurent_item_response.dart';
 import 'package:first_app/model/restaurent_list_response.dart';
 import 'package:mobx/mobx.dart';
@@ -16,6 +17,9 @@ abstract class _RestaurentStore with Store {
   int cartItemCounter = 0;
 
   @observable
+  List<DishItem> cartItems = [];
+
+  @observable
   RestaurentListResponse _restaurents = RestaurentListResponse.empty();
 
   @computed
@@ -23,14 +27,51 @@ abstract class _RestaurentStore with Store {
       ? _restaurents.restaurents[0]
       : RestaurentItem.empty();
 
+
+  @action 
+  int getQuantity(String dishId){
+    var cartItem = cartItems.firstWhere(
+        (item) => item.dishId == dishId,
+        orElse: () => null);
+    if (cartItem == null) {
+      return 0;
+    } else {
+     return cartItem.cartQuantity;
+    }
+  }
+
   @action
-  void addToCart() {
+  void addToCart(DishItem selectedItem) {
+    var cartItem = cartItems.firstWhere(
+        (item) => item.dishId == selectedItem.dishId,
+        orElse: () => null);
+    if (cartItem == null) {
+      selectedItem.cartQuantity++;
+      cartItems.add(selectedItem);
+    } else {
+      cartItems.remove(cartItem);
+      cartItem.cartQuantity++;
+      cartItems.add(cartItem);
+    }
     cartItemCounter++;
   }
 
   @action
-  void removeFromCart() {
+  void removeFromCart(DishItem selectedItem) {
     cartItemCounter--;
+    var cartItem = cartItems.firstWhere(
+        (item) => item.dishId == selectedItem.dishId,
+        orElse: () => null);
+    if (cartItem != null) {
+      if(cartItem.cartQuantity==1){
+      cartItems.remove(cartItem);
+      }
+      else {
+      cartItems.remove(cartItem);
+      cartItem.cartQuantity--;
+      cartItems.add(cartItem);
+    }
+    } 
   }
 
   @action

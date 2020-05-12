@@ -52,7 +52,8 @@ class _MyWidgetState extends State<MyWidget> {
                           size: 18,
                         ),
                       )
-                    : DishDetails(widget.restaurentStore.restaurent,
+                    : 
+                    DishDetails(widget.restaurentStore.restaurent,
                         widget.restaurentStore)));
   }
 }

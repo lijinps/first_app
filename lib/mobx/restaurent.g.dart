@@ -33,6 +33,23 @@ mixin _$RestaurentStore on _RestaurentStore, Store {
     }, _$cartItemCounterAtom, name: '${_$cartItemCounterAtom.name}_set');
   }
 
+  final _$cartItemsAtom = Atom(name: '_RestaurentStore.cartItems');
+
+  @override
+  List<DishItem> get cartItems {
+    _$cartItemsAtom.context.enforceReadPolicy(_$cartItemsAtom);
+    _$cartItemsAtom.reportObserved();
+    return super.cartItems;
+  }
+
+  @override
+  set cartItems(List<DishItem> value) {
+    _$cartItemsAtom.context.conditionallyRunInAction(() {
+      super.cartItems = value;
+      _$cartItemsAtom.reportChanged();
+    }, _$cartItemsAtom, name: '${_$cartItemsAtom.name}_set');
+  }
+
   final _$_restaurentsAtom = Atom(name: '_RestaurentStore._restaurents');
 
   @override
@@ -61,20 +78,30 @@ mixin _$RestaurentStore on _RestaurentStore, Store {
       ActionController(name: '_RestaurentStore');
 
   @override
-  void addToCart() {
+  int getQuantity(String dishId) {
     final _$actionInfo = _$_RestaurentStoreActionController.startAction();
     try {
-      return super.addToCart();
+      return super.getQuantity(dishId);
     } finally {
       _$_RestaurentStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void removeFromCart() {
+  void addToCart(DishItem selectedItem) {
     final _$actionInfo = _$_RestaurentStoreActionController.startAction();
     try {
-      return super.removeFromCart();
+      return super.addToCart(selectedItem);
+    } finally {
+      _$_RestaurentStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void removeFromCart(DishItem selectedItem) {
+    final _$actionInfo = _$_RestaurentStoreActionController.startAction();
+    try {
+      return super.removeFromCart(selectedItem);
     } finally {
       _$_RestaurentStoreActionController.endAction(_$actionInfo);
     }
@@ -83,7 +110,7 @@ mixin _$RestaurentStore on _RestaurentStore, Store {
   @override
   String toString() {
     final string =
-        'cartItemCounter: ${cartItemCounter.toString()},restaurent: ${restaurent.toString()}';
+        'cartItemCounter: ${cartItemCounter.toString()},cartItems: ${cartItems.toString()},restaurent: ${restaurent.toString()}';
     return '{$string}';
   }
 }

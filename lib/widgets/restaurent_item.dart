@@ -98,11 +98,12 @@ class _DishDetailsState extends State<DishDetails>
                     height: 15,
                   ),
                   QuantitySpinner(
+                    selectedQuantity: widget.restaurentStore.getQuantity(dishItem.dishId),
                     onQuantityAdd: () {
-                      widget.restaurentStore.addToCart();
+                      widget.restaurentStore.addToCart(dishItem);
                     },
                     onQuantityRemove: () {
-                      widget.restaurentStore.removeFromCart();
+                      widget.restaurentStore.removeFromCart(dishItem);
                     },
                   ),
                   SizedBox(
@@ -197,7 +198,7 @@ class _DishDetailsState extends State<DishDetails>
         .forEach((item) => tabViewList.add(CustomScrollView(slivers: <Widget>[
               SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  return buildDishList(tableMenuList[index].menuCategoryDishes);
+                  return buildDishList(item.menuCategoryDishes);
                 }, childCount: 1),
               )
             ])));
